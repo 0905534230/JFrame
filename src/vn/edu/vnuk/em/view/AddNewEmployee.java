@@ -9,6 +9,9 @@ import vn.edu.vnuk.em.define.Define;
 
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import javax.swing.JButton;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 @SuppressWarnings("serial")
 public class AddNewEmployee extends JPanel {
@@ -19,6 +22,8 @@ public class AddNewEmployee extends JPanel {
 	private WorkerPanel workerPanel;
 	private StaffPanel staffPanel;
 	private LecturerPanel lecturerPanel;
+	private JButton button;
+	private JButton button_1;
 	
 	/**
 	 * Create the panel.
@@ -87,6 +92,26 @@ public class AddNewEmployee extends JPanel {
 		lecturerPanel.setBounds(63, 169, 385, 255);
 		lecturerPanel.setVisible(false);
 		add(lecturerPanel);
+		
+		JButton btnNewButton = new JButton("Create");
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
+		btnNewButton.setBounds(345, 436, 103, 25);
+		add(btnNewButton);
+		
+		button = new JButton("Update");
+		button.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
+		button.setBounds(230, 436, 103, 25);
+		add(button);
+		
+		button_1 = new JButton("Update");
+		button_1.setBounds(115, 436, 103, 25);
+		add(button_1);
 	}
 	
 	public int getId() {
