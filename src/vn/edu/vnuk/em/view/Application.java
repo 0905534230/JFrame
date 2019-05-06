@@ -38,6 +38,7 @@ public class Application extends JFrame {
 	private JComboBox<String> cbxSearchingChoices;
 	private JButton btnSearch;
 	private JTable table;
+	private JPopupMenu popup;
 	
 	/**
 	 * Launch the application.
@@ -82,18 +83,18 @@ public class Application extends JFrame {
 		getContentPane().add(btnSearch);
 		
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(16, 59, 781, 458);
+		scrollPane.setBounds(16, 58, 781, 461);
 		getContentPane().add(scrollPane);
 		
 		table = new JTable(loadRowData(), loadColumnNames());
 		table.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				btnSearch.setText(String.valueOf(table.getSelectedRow()));
+				if (e.getButton() == MouseEvent.BUTTON3) {
+					popup.show(e.getComponent(), e.getX(), e.getY());
+				}
 			}
 		});
-		table.getColumn("ID").setCellRenderer(new ButtonRenderer());
-		table.getColumn("ID").setCellEditor(new ButtonEditor(new JCheckBox()));
 		scrollPane.setViewportView(table);
 
 		
@@ -112,6 +113,13 @@ public class Application extends JFrame {
 		
 		JMenuItem mntmExit = new JMenuItem("Exit");
 		mnFile.add(mntmExit);
+		
+		popup = new JPopupMenu();
+		JMenuItem deleteMenuItem = new JMenuItem("Delete");
+		JMenuItem viewMenuItem = new JMenuItem("View details");
+		
+		popup.add(deleteMenuItem);
+		popup.add(viewMenuItem);
 	}
 	
 	private Object[] loadColumnNames() {
