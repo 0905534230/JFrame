@@ -3,17 +3,15 @@ package vn.edu.vnuk.em.view;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
-import javax.swing.table.TableModel;
+
+import vn.edu.vnuk.em.dao.PersonDao;
+
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 
-import java.awt.BorderLayout;
 import java.awt.Component;
 
 import javax.swing.JComboBox;
@@ -26,7 +24,6 @@ import javax.swing.JCheckBox;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.JTable;
-import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.JPopupMenu;
 import java.awt.event.MouseAdapter;
@@ -47,6 +44,7 @@ public class Application extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
+					System.out.println(new PersonDao().read(1L).toString());
 					Application frame = new Application();
 					frame.setVisible(true);
 				} catch (Exception e) {
@@ -86,7 +84,12 @@ public class Application extends JFrame {
 		scrollPane.setBounds(16, 58, 781, 461);
 		getContentPane().add(scrollPane);
 		
-		table = new JTable(loadRowData(), loadColumnNames());
+		table = new JTable(loadRowData(), loadColumnNames()) {
+			public boolean isCellEditable(int row,int column){  
+				return false;
+		    }
+		
+		};
 		table.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -95,6 +98,8 @@ public class Application extends JFrame {
 				}
 			}
 		});
+		
+		
 		scrollPane.setViewportView(table);
 
 		
@@ -116,7 +121,17 @@ public class Application extends JFrame {
 		
 		popup = new JPopupMenu();
 		JMenuItem deleteMenuItem = new JMenuItem("Delete");
+		deleteMenuItem.addMouseListener(new MouseAdapter() {
+			public void mouseClicked(MouseEvent e) {
+				
+			}
+		});
 		JMenuItem viewMenuItem = new JMenuItem("View details");
+		viewMenuItem.addMouseListener(new MouseAdapter() {
+			public void mouseClicked(MouseEvent e) {
+				
+			}
+		});
 		
 		popup.add(deleteMenuItem);
 		popup.add(viewMenuItem);

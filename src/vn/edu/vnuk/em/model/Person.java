@@ -1,13 +1,19 @@
 package vn.edu.vnuk.em.model;
 
-public abstract class Person {
-	protected int id;
+public class Person {
+	protected long id;
 	protected int yearOfBirth;
 	protected int type;
 	protected String name;
 	
 	public Person() {
 		
+	}
+	
+	public Person(String name, int type, int yearOfBirth) {
+		this.name = name;
+		this.type = type;
+		this.yearOfBirth = yearOfBirth;
 	}
 	
 	public Person(int id) {
@@ -26,11 +32,11 @@ public abstract class Person {
 		this.name = name;
 	}
 
-	public int getId() {
+	public long getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 
@@ -57,11 +63,12 @@ public abstract class Person {
 	public void setName(String name) {
 		this.name = name;
 	}
+	
+	@Override
+	public String toString() {
+		return "Person [id=" + id + ", yearOfBirth=" + yearOfBirth + ", type=" + type + ", name=" + name + "]";
+	}
 
-	public abstract String toString();
-	
-	public abstract void input();
-	
-	public abstract float getSalary();
+	public float getSalary() { return 0;}
 }
 

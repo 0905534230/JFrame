@@ -40,9 +40,11 @@ public class Define {
 	public static final String POSITION_OF_CHIEF = "CHIEF";
 	public static final String POSITION_OF_DEPUTY = "DEPUTY";
 	public static final String POSITION_OF_EMPLOYEE = "EMPLOYEE";
-
 	
 	public static float newMinimumWage = DEFAULT_MINIMUM_WAGE;
 	
 	public static ArrayList <Person> persons = new ArrayList <>();
+	
+	public static final int TYPE_OF_ACTION_CREATE = 0;
+	public static final int TYPE_OF_ACTION_EDIT = 1;
 }

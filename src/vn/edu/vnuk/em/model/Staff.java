@@ -1,10 +1,6 @@
 package vn.edu.vnuk.em.model;
 
-import vn.edu.vnuk.em.controller.Observer;
-import java.util.Scanner;
-import vn.edu.vnuk.em.define.Define;
-
-public class Staff extends Person implements Observer {
+public class Staff extends Person {
 	private String hometown;
 	private String department;
 	private float salaryRatio;
@@ -13,7 +9,7 @@ public class Staff extends Person implements Observer {
 	private int workDay;
 	private int yearOfWork;
 	private float minimumWage;
-	private boolean isCreated;
+	private long personId;
 	
 	public String getHometown() {
 		return hometown;
@@ -78,165 +74,17 @@ public class Staff extends Person implements Observer {
 	public void setMinimumWage(float minimumWage) {
 		this.minimumWage = minimumWage;
 	}
-
-	private Staff(StaffBuilder builder) {
-		this.isCreated = false;
-		this.id = builder.id;
-		this.yearOfBirth = builder.yearOfBirth;
-		this.type = builder.type;
-		this.name = builder.name;
-		this.hometown = builder.hometown;
-		this.department = builder.department;
-		this.salaryRatio = builder.salaryRatio;
-		this.allowance = builder.allowance;
-		this.position = builder.position;
-		this.workDay = builder.workDay;
-		this.yearOfWork = builder.yearOfWork;
-		this.minimumWage = builder.minimumWage;
+	
+	public void setPersonId(long personId) {
+		this.personId = personId;
 	}
 	
-	// Builder Class
-	
-	public static class StaffBuilder {
-		private int id;
-		private int yearOfBirth;
-		private int type;
-		private String name;
-		private String hometown;
-		private String department;
-		private String position;
-		private int allowance;
-		private int workDay;
-		private float salaryRatio;
-		private int yearOfWork;
-		private float minimumWage;
-		
-		public StaffBuilder (int id, int type) {
-			this.id = id;
-			this.type = type;
-		}
-		
-		public StaffBuilder setYearOfBirth(int yearOfBirth) {
-			this.yearOfBirth = yearOfBirth;
-			return this;
-		}
-	
-		public StaffBuilder setName(String name) {
-			this.name = name;
-			return this;
-		}
-	
-		public StaffBuilder setHometown(String hometown) {
-			this.hometown = hometown;
-			return this;
-		}
-	
-		public StaffBuilder setDepartment(String department) {
-			this.department = department;
-			return this;
-		}
-		
-		public StaffBuilder setPosition(String position) {
-			this.position = position;
-			return this;
-		}
-	
-		public StaffBuilder setAllowance(int allowance) {
-			this.allowance = allowance;
-			return this;
-		}
-	
-		public StaffBuilder setWorkDay(int workDay) {
-			this.workDay = workDay;
-			return this;
-		}
-	
-		public StaffBuilder setSalaryRatio(float salaryRatio) {
-			this.salaryRatio = salaryRatio;
-			return this;
-		}
-	
-		public StaffBuilder setYearOfWork(int yearOfWork) {
-			this.yearOfWork = yearOfWork;
-			return this;
-		}
-		
-		public StaffBuilder setMinimumWage(float minimumWage) {
-			this.minimumWage = minimumWage;
-			return this;
-		}
-	
-		public Staff build() {
-			return new Staff(this);
-		}
-	}
-	
-	
-	
-	@Override
-	public String toString() {
-		return "Staff [hometown=" + hometown + ", department=" + department + ", salaryRatio=" + salaryRatio
-				+ ", allowance=" + allowance + ", position=" + position + ", workDay=" + workDay + ", yearOfWork="
-				+ yearOfWork + ", minimumWage=" + minimumWage + ", id=" + id + ", yearOfBirth=" + yearOfBirth
-				+ ", type=" + type + ", name=" + name + "]";
+	public long getPersonId() {
+		return personId;
 	}
 
-	@Override
-	public void input() {
-		Scanner sc = new Scanner(System.in);
-
-		System.out.println("Enter your name " + ((isCreated) ? this.name : " ") + " ");
-		this.name = sc.nextLine();
-		
-		System.out.println("Enter your birth year " + ((isCreated) ? this.yearOfBirth : " ") + ": ");
-		this.yearOfBirth = Integer.parseInt(sc.nextLine());
-		
-		System.out.println("Enter your hometown " + ((isCreated) ? this.hometown : " ") + ": ");
-		this.hometown = sc.nextLine();
-		
-		System.out.println("Enter your department " + ((isCreated) ? this.department : " ") + ": ");
-		this.department = sc.nextLine();
-		
-		System.out.println("Enter your salary ratio " + ((isCreated) ? this.salaryRatio : " ") + ": ");
-		this.salaryRatio = Float.parseFloat(sc.nextLine());
-		
-		System.out.println("Enter your number of working days " + ((isCreated) ? this.workDay : " ") + ": ");
-		this.workDay = Integer.parseInt(sc.nextLine());
-		
-		System.out.println("Enter your number of working years " + ((isCreated) ? this.yearOfWork : " ") + ": ");
-		this.yearOfWork = Integer.parseInt(sc.nextLine());
-		
-		minimumWage = Define.DEFAULT_MINIMUM_WAGE;
-		
-		System.out.println("Choose your position " + ((isCreated) ? this.position : " ") + "\n" +
-				   		   "1. Chief of department. \n" +
-				           "2. Deputy of department. \n" +
-				   	       "3. Employee.");
-		int selection = sc.nextInt();
-		switch (selection) {
-		case Define.TYPE_OF_CHIEF: {
-			this.position = Define.POSITION_OF_CHIEF;
-			this.allowance = Define.ALLOWANCE_OF_CHIEF;
-			break;
-		}
-		case Define.TYPE_OF_DEPUTY: {
-			this.position = Define.POSITION_OF_DEPUTY;
-			this.allowance = Define.ALLOWANCE_OF_DEPUTY;
-			break;
-		}
-		case Define.TYPE_OF_EMPLOYEE: {
-			this.position = Define.POSITION_OF_EMPLOYEE;
-			this.allowance = Define.ALLOWANCE_OF_EMPLOYEE;
-			break;
-		}
-		}
-		
-		if (!isCreated) isCreated = true;
-	}
-
-	@Override
-	public void update(float minimumWage) {
-		this.minimumWage = minimumWage;
+	public void setPersonId(int personId) {
+		this.personId = personId;
 	}
 
 	@Override
@@ -245,5 +93,11 @@ public class Staff extends Person implements Observer {
 		return salary;
 	}
 
+	@Override
+	public String toString() {
+		return "Staff [hometown=" + hometown + ", department=" + department + ", salaryRatio=" + salaryRatio
+				+ ", allowance=" + allowance + ", position=" + position + ", workDay=" + workDay + ", yearOfWork="
+				+ yearOfWork + ", minimumWage=" + minimumWage + ", personId=" + personId + "]";
+	}
 	
 }
