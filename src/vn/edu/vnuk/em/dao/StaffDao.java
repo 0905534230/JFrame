@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import vn.edu.vnuk.em.dao.ConnectionFactory;
+import vn.edu.vnuk.em.define.Define;
 import vn.edu.vnuk.em.model.Person;
 import vn.edu.vnuk.em.model.Staff;
 
@@ -28,7 +29,7 @@ public class StaffDao {
 		
 		long idReturned = -1;
 		
-		String sqlQuery = "insert into Staffs (Allowance, Department, Hometown, MinimumWage, Position, SalaryRatio, WorkDay, YearOfWork, PersonsID) "
+		String sqlQuery = "insert into Staffs (Allowance, Department, Hometown, MinimumWage, Position, SalaryRatio, WorkDay, YearOfWork, PersonID) "
                 + "values (?, ?, ?, ?, ?, ?, ?, ?, ?);";
 		
 		System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
@@ -155,7 +156,7 @@ public class StaffDao {
 				+ 		  "from Staffs "
 				+ 		  "inner join Persons "
 				+         "on Persons.ID = Staffs.PersonID "
-				+ 		  "where id = ?;";
+				+ 		  "where Staffs.PersonID = ?;";
 		
 		PreparedStatement statement;
 		
@@ -198,7 +199,7 @@ public class StaffDao {
 						+ "    Staffs.SalaryRatio = ?, "
 						+ "    Staffs.WorkDay = ?, "
 						+ "    Staffs.YearOfWork = ? "
-						+ "where id = ?";
+						+ "where PersonID = ?";
 		
 		System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
 		System.out.println(">  Update staff started");
@@ -248,7 +249,7 @@ public class StaffDao {
 		
 		if (connection.isClosed()) this.connection = new ConnectionFactory().getConnection();
 		
-		String sqlQuery = "delete from Staffs where id = ?;";
+		String sqlQuery = "delete from Staffs where PersonID = ?;";
 		
 		System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
 		System.out.println(">  Delete staff started");
@@ -297,7 +298,7 @@ public class StaffDao {
 		staff.setAllowance(results.getInt("Allowance"));
 		staff.setDepartment(results.getString("Department"));
 		staff.setHometown(results.getString("Hometown"));
-		staff.setMinimumWage(results.getFloat("MinimunWage"));
+		staff.setMinimumWage(Define.DEFAULT_MINIMUM_WAGE);
 		staff.setPersonId(results.getInt("PersonID"));
 		staff.setPosition(results.getString("Position"));
 		staff.setSalaryRatio(results.getFloat("SalaryRatio"));

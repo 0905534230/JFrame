@@ -3,23 +3,29 @@ package vn.edu.vnuk.em.view;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
-import javax.swing.table.TableCellRenderer;
+import javax.swing.table.DefaultTableModel;
 
+import vn.edu.vnuk.em.controller.Controller;
+import vn.edu.vnuk.em.dao.CasualWorkerDao;
+import vn.edu.vnuk.em.dao.LecturerDao;
 import vn.edu.vnuk.em.dao.PersonDao;
+import vn.edu.vnuk.em.dao.StaffDao;
+import vn.edu.vnuk.em.define.Define;
+import vn.edu.vnuk.em.model.CasualWorker;
+import vn.edu.vnuk.em.model.Lecturer;
+import vn.edu.vnuk.em.model.Person;
+import vn.edu.vnuk.em.model.Staff;
+import vn.edu.vnuk.em.util.CommonUtils;
 
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
 
 import java.awt.Component;
 
 import javax.swing.JComboBox;
 import javax.swing.JTextField;
-import javax.swing.UIManager;
-import javax.swing.DefaultCellEditor;
 import javax.swing.JButton;
-import javax.swing.JCheckBox;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -28,6 +34,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JPopupMenu;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.sql.SQLException;
+import java.util.ArrayList;
 
 @SuppressWarnings("serial")
 public class Application extends JFrame {
@@ -56,8 +64,33 @@ public class Application extends JFrame {
 	
 	/**
 	 * Create the frame.
+	 * @throws SQLException 
 	 */
-	public Application() {
+	
+	public void reloadTableData() {
+		DefaultTableModel model = null;
+		String keyword = tbxSearching.getText();
+		String sortBy = cbxSearchingChoices.getSelectedItem().toString();
+		
+		try {
+			switch (sortBy) {
+			case "Name":
+				model = new DefaultTableModel(CommonUtils.sortByName(loadRowData(keyword)), loadColumnNames());
+				break;
+			case "Salary":
+				model = new DefaultTableModel(CommonUtils.sortBySalary(loadRowData(keyword)), loadColumnNames());
+				break;
+			}
+				
+			
+		} catch (SQLException exception) {
+			exception.printStackTrace();
+		}
+		
+		table.setModel(model);
+	}
+	
+	public Application() throws SQLException {
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 816, 583);
@@ -75,6 +108,7 @@ public class Application extends JFrame {
 		btnSearch = new JButton("Search");
 		btnSearch.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				reloadTableData();
 			}
 		});
 		btnSearch.setBounds(680, 23, 117, 25);
@@ -84,12 +118,13 @@ public class Application extends JFrame {
 		scrollPane.setBounds(16, 58, 781, 461);
 		getContentPane().add(scrollPane);
 		
-		table = new JTable(loadRowData(), loadColumnNames()) {
+		table = new JTable(loadRowData(""), loadColumnNames()) {
 			public boolean isCellEditable(int row,int column){  
 				return false;
 		    }
 		
 		};
+		
 		table.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -111,6 +146,13 @@ public class Application extends JFrame {
 		menuBar.add(mnFile);
 		
 		JMenuItem mntmAddNewEmployee = new JMenuItem("Add new employee");
+		mntmAddNewEmployee.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				AddNewEmployee addNewEmployeeFrame = new AddNewEmployee(new Person(), Define.TYPE_OF_ACTION_CREATE);
+				addNewEmployeeFrame.setSize(500, 510);
+				addNewEmployeeFrame.setVisible(true);
+			}
+		});
 		mnFile.add(mntmAddNewEmployee);
 		
 		JMenuItem mntmUpdateBasicSalary = new JMenuItem("Update basic salary");
@@ -121,11 +163,34 @@ public class Application extends JFrame {
 		
 		popup = new JPopupMenu();
 		JMenuItem deleteMenuItem = new JMenuItem("Delete");
-		deleteMenuItem.addMouseListener(new MouseAdapter() {
-			public void mouseClicked(MouseEvent e) {
+		deleteMenuItem.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				System.out.println("Delete");
+				try {
+					switch(getTypeSelected()) {
+					case Define.TYPE_OF_LECTURER:
+						new LecturerDao().delete(getPersonIDSelected());
+						break;
+					
+					case Define.TYPE_OF_STAFF:
+						new StaffDao().delete(getPersonIDSelected());
+						break;
+					
+					case Define.TYPE_OF_CASUAL_WORKER:
+						new CasualWorkerDao().delete(getPersonIDSelected());
+						break;
+					}
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 				
+				reloadTableData();
 			}
 		});
+		
 		JMenuItem viewMenuItem = new JMenuItem("View details");
 		viewMenuItem.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
@@ -137,91 +202,66 @@ public class Application extends JFrame {
 		popup.add(viewMenuItem);
 	}
 	
+	private int getTypeSelected() {
+		int result = 0;
+		switch ((String) table.getValueAt(table.getSelectedRow(), 1)) {
+		case "LECTURER":
+			result = Define.TYPE_OF_LECTURER;
+			break;
+			
+		case "STAFF":
+			result = Define.TYPE_OF_STAFF;
+			break;
+			
+		case "CASUAL WORKER":
+			result = Define.TYPE_OF_CASUAL_WORKER;
+			break;
+		}
+		
+		return result;
+	}
+	
+	private long getPersonIDSelected() {
+		return (long) table.getValueAt(table.getSelectedRow(), 0);
+	}
+	
 	private Object[] loadColumnNames() {
 		return new Object[] {"ID", "Type", "Name", "Salary"};
 	}
 	
-	private Object[][] loadRowData() {
-		return new Object[][] {{"1", "2", "3", "4"}, {"1", "2", "3", "4"}};
+	private Object[][] loadRowData(String keyword) throws SQLException {
+		Controller controller = new Controller();
+		ArrayList<Person> persons = controller.getAllPersons(keyword);
+		
+		Object[][] obj = new Object[persons.size()][4];
+		
+		for (int index = 0; index < persons.size(); index++) {
+			obj[index][0] = persons.get(index).getId();
+			obj[index][1] = CommonUtils.getTypeString(persons.get(index).getType());
+			obj[index][2] = persons.get(index).getName();
+			
+			switch (persons.get(index).getType()) {
+			case Define.TYPE_OF_STAFF: {
+				obj[index][3] = ((Staff) persons.get(index)).getSalary();
+				break;
+			}
+			
+			case Define.TYPE_OF_LECTURER: {
+				obj[index][3] = ((Lecturer) persons.get(index)).getSalary();
+				break;
+			}
+			
+			case Define.TYPE_OF_CASUAL_WORKER: {
+				obj[index][3] = ((CasualWorker) persons.get(index)).getSalary();
+				break;
+			}
+			}
+		}
+		
+		return obj;
 	}
 	
-	class ButtonRenderer extends JButton implements TableCellRenderer {
-
-		  public ButtonRenderer() {
-		    setOpaque(true);
-		  }
-
-		  public Component getTableCellRendererComponent(JTable table, Object value,
-		      boolean isSelected, boolean hasFocus, int row, int column) {
-		    if (isSelected) {
-		      setForeground(table.getSelectionForeground());
-		      setBackground(table.getSelectionBackground());
-		    } else {
-		      setForeground(table.getForeground());
-		      setBackground(UIManager.getColor("Button.background"));
-		    }
-		    setText((value == null) ? "" : value.toString());
-		    return this;
-		  }
-		}
-
-		/**
-		 * @version 1.0 11/09/98
-		 */
-
-		class ButtonEditor extends DefaultCellEditor {
-		  protected JButton button;
-
-		  private String label;
-
-		  private boolean isPushed;
-
-		  public ButtonEditor(JCheckBox checkBox) {
-		    super(checkBox);
-		    button = new JButton();
-		    button.setOpaque(true);
-		    button.addActionListener(new ActionListener() {
-		      public void actionPerformed(ActionEvent e) {
-		        fireEditingStopped();
-		      }
-		    });
-		  }
-
-		  public Component getTableCellEditorComponent(JTable table, Object value,
-		      boolean isSelected, int row, int column) {
-		    if (isSelected) {
-		      button.setForeground(table.getSelectionForeground());
-		      button.setBackground(table.getSelectionBackground());
-		    } else {
-		      button.setForeground(table.getForeground());
-		      button.setBackground(table.getBackground());
-		    }
-		    label = (value == null) ? "" : value.toString();
-		    button.setText(label);
-		    isPushed = true;
-		    return button;
-		  }
-
-		  public Object getCellEditorValue() {
-		    if (isPushed) {
-		      // 
-		      // 
-		      JOptionPane.showMessageDialog(button, label + ": Ouch!");
-		      // System.out.println(label + ": Ouch!");
-		    }
-		    isPushed = false;
-		    return new String(label);
-		  }
-
-		  public boolean stopCellEditing() {
-		    isPushed = false;
-		    return super.stopCellEditing();
-		  }
-
-		  protected void fireEditingStopped() {
-		    super.fireEditingStopped();
-		  }
-		}
+	@SuppressWarnings("unused")
 	private static void addPopup(Component component, final JPopupMenu popup) {
 		component.addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent e) {

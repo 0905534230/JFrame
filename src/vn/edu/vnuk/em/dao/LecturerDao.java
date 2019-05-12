@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import vn.edu.vnuk.em.dao.ConnectionFactory;
+import vn.edu.vnuk.em.define.Define;
 import vn.edu.vnuk.em.model.Lecturer;
 import vn.edu.vnuk.em.model.Person;
 import vn.edu.vnuk.em.model.Staff;
@@ -29,7 +30,7 @@ public class LecturerDao {
 		
 		long idReturned = -1;
 		
-		String sqlQuery = "insert into Lecturers (Allowance, Department, Hometown, MinimumWage, Qualification, SalaryRatio, PeriodsInMonth, YearOfWork, PersonsID) "
+		String sqlQuery = "insert into Lecturers (Allowance, Department, Hometown, MinimumWage, Qualification, SalaryRatio, PeriodsInMonth, YearOfWork, PersonID) "
                 + "values (?, ?, ?, ?, ?, ?, ?, ?, ?);";
 		
 		System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
@@ -147,7 +148,6 @@ public class LecturerDao {
 				+ 		  "       Lecturers.Allowance, "
 				+ 		  "       Lecturers.Department, "
 				+ 		  "       Lecturers.Hometown, "
-				+ 		  "       Lecturers.MinimumWage, "
 				+ 		  "       Lecturers.Qualification, "
 				+ 		  "		  Lecturers.SalaryRatio, "
 				+         "		  Lecturers.PeriodsInMonth, "
@@ -156,7 +156,7 @@ public class LecturerDao {
 				+ 		  "from Lecturers "
 				+ 		  "inner join Persons "
 				+         "on Persons.ID = Lecturers.PersonID "
-				+ 		  "where id = ?;";
+				+ 		  "where Lecturers.PersonID = ?;";
 		
 		PreparedStatement statement;
 		
@@ -184,22 +184,21 @@ public class LecturerDao {
 		}
 	}
 	
-	public void update(Long id, Staff staff) throws SQLException {
+	public void update(Long id, Lecturer lecturer) throws SQLException {
 		
-		new PersonDao().update(staff.getPersonId(), new Person(staff.getName(), staff.getType(), staff.getYearOfBirth()));
+		new PersonDao().update(lecturer.getPersonId(), new Person(lecturer.getName(), lecturer.getType(), lecturer.getYearOfBirth()));
 		
 		if (connection.isClosed()) this.connection = new ConnectionFactory().getConnection();
 		
 		String sqlQuery = "update Lecturers "
-						+ "set Staffs.Allowance = ?, "
-						+ "    Staffs.Department = ?, "
-						+ "    Staffs.Hometown = ?, "
-						+ "    Staffs.MinimumWage = ?, "
-						+ "    Staffs.Position = ?, "
-						+ "    Staffs.SalaryRatio = ?, "
-						+ "    Staffs.WorkDay = ?, "
-						+ "    Staffs.YearOfWork = ? "
-						+ "where id = ?";
+						+ "set Lecturers.Allowance = ?, "
+						+ "    Lecturers.Department = ?, "
+						+ "    Lecturers.Hometown = ?, "
+						+ "    Lecturers.Qualification = ?, "
+						+ "    Lecturers.SalaryRatio = ?, "
+						+ "    Lecturers.PeriodsInMonth = ?, "
+						+ "    Lecturers.YearOfWork = ? "
+						+ "where PersonID = ?";
 		
 		System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
 		System.out.println(">  Update lecturer started");
@@ -210,15 +209,14 @@ public class LecturerDao {
 			statement = connection.prepareStatement(sqlQuery);
 
             //	Replacing "?" through values
-            statement.setInt(1, staff.getAllowance());
-            statement.setString(2, staff.getDepartment());
-            statement.setString(3, staff.getHometown());
-            statement.setFloat(4, staff.getMinimumWage());
-            statement.setString(5, staff.getPosition());
-            statement.setFloat(6, staff.getSalaryRatio());
-            statement.setInt(7, staff.getWorkDay());
-            statement.setInt(8, staff.getYearOfBirth());
-            statement.setLong(9, id);
+            statement.setInt(1, lecturer.getAllowance());
+            statement.setString(2, lecturer.getDepartment());
+            statement.setString(3, lecturer.getHometown());
+            statement.setString(4, lecturer.getQualification());
+            statement.setFloat(5, lecturer.getSalaryRatio());
+            statement.setInt(6, lecturer.getPeriodsInMonth());
+            statement.setInt(7, lecturer.getYearOfWork());
+            statement.setLong(8, id);
             
             // 	Executing statement
 			int rowsUpdated = statement.executeUpdate();
@@ -249,7 +247,7 @@ public class LecturerDao {
 		
 		if (connection.isClosed()) this.connection = new ConnectionFactory().getConnection();
 		
-		String sqlQuery = "delete from Lecturers where id = ?;";
+		String sqlQuery = "delete from Lecturers where PersonID = ?;";
 		
 		System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
 		System.out.println(">  Delete lecturer started");
@@ -298,7 +296,7 @@ public class LecturerDao {
 		lecturer.setAllowance(results.getInt("Allowance"));
 		lecturer.setDepartment(results.getString("Department"));
 		lecturer.setHometown(results.getString("Hometown"));
-		lecturer.setMinimumWage(results.getFloat("MinimunWage"));
+		lecturer.setMinimumWage(Define.DEFAULT_MINIMUM_WAGE);
 		lecturer.setPersonId(results.getInt("PersonID"));
 		lecturer.setQualification(results.getString("Qualification"));
 		lecturer.setSalaryRatio(results.getFloat("SalaryRatio"));

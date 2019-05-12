@@ -30,10 +30,10 @@ CREATE TABLE `Lecturers`
   `ID` int PRIMARY KEY AUTO_INCREMENT,
   `PersonID` int,
   `Hometown` varchar(200),
+  `Department` varchar(40),
   `Qualification` varchar(40),
   `SalaryRatio` float,
   `Allowance` int,
-  `Position` varchar(40),
   `PeriodsInMonth` int,
   `YearOfWork` int,
   `MinimumWage` float

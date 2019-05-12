@@ -28,7 +28,7 @@ public class CasualWorkerDao {
 		
 		long idReturned = -1;
 		
-		String sqlQuery = "insert into CasualWorkers (EarningPerDay, WorkDay, PersonsID) "
+		String sqlQuery = "insert into CasualWorkers (EarningPerDay, WorkDay, PersonID) "
                 + "values (?, ?, ?);";
 		
 		System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
@@ -131,19 +131,13 @@ public class CasualWorkerDao {
 				+         "       Persons.Name, "
 				+         "       Persons.Type, "
 				+         "       Persons.YearOfBirth, "
-				+ 		  "       CasualWorkers.Allowance, "
-				+ 		  "       CasualWorkers.Department, "
-				+ 		  "       CasualWorkers.Hometown, "
-				+ 		  "       CasualWorkers.MinimumWage, "
-				+ 		  "       CasualWorkers.Qualification, "
-				+ 		  "		  CasualWorkers.SalaryRatio, "
-				+         "		  CasualWorkers.PeriodsInMonth, "
-				+ 		  "		  CasualWorkers.YearOfWork, "
+				+ 		  "       CasualWorkers.EarningPerDay, "
+				+         "		  CasualWorkers.WorkDay, "
 				+ 		  "		  CasualWorkers.PersonID "
 				+ 		  "from CasualWorkers "
 				+ 		  "inner join Persons "
 				+         "on Persons.ID = CasualWorkers.PersonID "
-				+ 		  "where id = ?;";
+				+ 		  "where CasualWorkers.PersonID = ?;";
 		
 		PreparedStatement statement;
 		
@@ -180,7 +174,7 @@ public class CasualWorkerDao {
 		String sqlQuery = "update staffs "
 						+ "set EarningPerDay = ?, "
 						+ "    WorkDay = ?, "
-						+ "where id = ?";
+						+ "where PersonID = ?";
 		
 		System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
 		System.out.println(">  Update casualWorker started");
@@ -224,7 +218,7 @@ public class CasualWorkerDao {
 		
 		if (connection.isClosed()) this.connection = new ConnectionFactory().getConnection();
 		
-		String sqlQuery = "delete from CasualWorkers where id = ?;";
+		String sqlQuery = "delete from CasualWorkers where PersonID = ?;";
 		
 		System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
 		System.out.println(">  Delete casualWorker started");

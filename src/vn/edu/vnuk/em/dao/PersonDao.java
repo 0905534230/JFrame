@@ -8,7 +8,11 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+import vn.edu.vnuk.em.define.Define;
+import vn.edu.vnuk.em.model.CasualWorker;
+import vn.edu.vnuk.em.model.Lecturer;
 import vn.edu.vnuk.em.model.Person;
+import vn.edu.vnuk.em.model.Staff;
 
 public class PersonDao {
 	private Connection connection;
@@ -73,7 +77,7 @@ public class PersonDao {
 		if (connection.isClosed()) this.connection = new ConnectionFactory().getConnection();
 		
 		List<Person> persons = new ArrayList<Person>();
-		String sqlQuery = "select * from Persons where name LIKE '%?%';";
+		String sqlQuery = "select * from Persons where name LIKE '%" + keyword + "%';";
 	
 		System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
 		System.out.println(">  Read persons started");
@@ -83,12 +87,44 @@ public class PersonDao {
 		try {			
 			statement = connection.prepareStatement(sqlQuery);
 			
-			statement.setString(1, keyword);
-			
 			ResultSet results = statement.executeQuery();
 			
 			while(results.next()) {
-				persons.add(buildPerson(results));
+				Person person = buildPerson(results);
+				switch(person.getType()) {
+					case Define.TYPE_OF_STAFF: {
+						Staff staff = new Staff();
+						staff = new StaffDao().read(person.getId());
+						staff.setId(person.getId());
+						staff.setType(person.getType());
+						staff.setName(person.getName());
+						staff.setYearOfBirth(person.getYearOfBirth());
+						persons.add(staff);
+						break;
+					}
+					
+					case Define.TYPE_OF_LECTURER: {
+						Lecturer lecturer = new Lecturer();
+						lecturer = new LecturerDao().read(person.getId());
+						lecturer.setId(person.getId());
+						lecturer.setType(person.getType());
+						lecturer.setName(person.getName());
+						lecturer.setYearOfBirth(person.getYearOfBirth());
+						persons.add(lecturer);
+						break;
+					}
+					
+					case Define.TYPE_OF_CASUAL_WORKER: {
+						CasualWorker casualWorker = new CasualWorker();
+						casualWorker = new CasualWorkerDao().read(person.getId());
+						casualWorker.setId(person.getId());
+						casualWorker.setType(person.getType());
+						casualWorker.setName(person.getName());
+						casualWorker.setYearOfBirth(person.getYearOfBirth());
+						persons.add(casualWorker);
+						break;
+					}
+				}
 			}
 			
 			results.close();
@@ -189,9 +225,9 @@ public class PersonDao {
 	
 	public void delete(Long id) throws SQLException {
 
-		if (connection.isClosed()) this.connection = new ConnectionFactory().getConnection();
+		Person person = read(id);
 		
-		Person person = new Person();
+		if (connection.isClosed()) this.connection = new ConnectionFactory().getConnection();
 		
 		String sqlQuery = "delete from Persons where id = ?;";
 		
@@ -201,7 +237,6 @@ public class PersonDao {
 		PreparedStatement statement;
 		
 		try {
-			person = read(id);
 			
 			statement = connection.prepareStatement(sqlQuery);
 			

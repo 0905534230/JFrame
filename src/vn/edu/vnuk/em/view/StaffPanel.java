@@ -102,74 +102,102 @@ public class StaffPanel extends JPanel {
 	
 
 	@SuppressWarnings("unused")
-	private String getHometown() {
+	public String getHometown() {
 		return this.tbxHometown.getText();
 	}
 
 	@SuppressWarnings("unused")
-	private void setHometown(String hometown) {
+	public void setHometown(String hometown) {
 		this.tbxHometown.setText(hometown);
 	}
 
 	@SuppressWarnings("unused")
-	private String getDepartment() {
+	public String getDepartment() {
 		return this.tbxDepartment.getText();
 	}
 
 	@SuppressWarnings("unused")
-	private void setDepartment(String department) {
+	public void setDepartment(String department) {
 		this.tbxDepartment.setText(department);
 	}
 
 	@SuppressWarnings("unused")
-	private String getAllowance() {
+	public String getAllowance() {
 		return this.tbxAllowance.getText();
 	}
 
 	@SuppressWarnings("unused")
-	private void setAllowance(String allowance) {
+	public void setAllowance(String allowance) {
 		this.tbxAllowance.setText(allowance);
 	}
 
 	@SuppressWarnings("unused")
-	private String getWorkDay() {
+	public String getWorkDay() {
 		return this.tbxWorkDay.getText();
 	}
 
 	@SuppressWarnings("unused")
-	private void setWorkDay(String workDay) {
+	public void setWorkDay(String workDay) {
 		this.tbxWorkDay.setText(workDay);
 	}
 
 	@SuppressWarnings("unused")
-	private String getSalaryRatio() {
+	public String getSalaryRatio() {
 		return this.tbxSalaryRatio.getText();
 	}
 
 	@SuppressWarnings("unused")
-	private void setSalaryRatio(String salaryRatio) {
+	public void setSalaryRatio(String salaryRatio) {
 		this.tbxSalaryRatio.setText(salaryRatio);
 	}
 
 	@SuppressWarnings("unused")
-	private String getYearOfWork() {
+	public String getYearOfWork() {
 		return this.tbxYearOfWork.getText();
 	}
 
 	@SuppressWarnings("unused")
-	private void setYearOfWork(String yearOfWork) {
+	public void setYearOfWork(String yearOfWork) {
 		this.tbxYearOfWork.setText(yearOfWork);
 	}
 
 	@SuppressWarnings("unused")
-	private int getPosition() {
+	public int getPosition() {
 		return this.cbxPosition.getSelectedIndex();
+	}
+	
+	public String getPositionString() {
+		return this.cbxPosition.getSelectedItem().toString();
 	}
 
 	@SuppressWarnings("unused")
-	private void setPosition(int position) {
+	public void setPosition(int position) {
 		setAllowanceByPostion(position);
 		this.cbxPosition.setSelectedIndex(position);
+	}
+	
+	public void setPosition(String position) {
+		int positionInt = 0;
+		
+		switch(position) {
+		case Define.POSITION_OF_EMPLOYEE: {
+			positionInt = Define.TYPE_OF_CHIEF;
+			break;
+		}
+		
+		case Define.POSITION_OF_DEPUTY: {
+			positionInt = Define.TYPE_OF_DEPUTY;
+			break;
+		}
+		
+		case Define.POSITION_OF_CHIEF: {
+			positionInt = Define.TYPE_OF_CHIEF;
+			break;
+		}
+		}
+		
+		setAllowanceByPostion(positionInt);
+		this.cbxPosition.setSelectedIndex(positionInt);
 	}
 	
 	private void setAllowanceByPostion(int position) {

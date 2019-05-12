@@ -36,22 +36,22 @@ public class WorkerPanel extends JPanel {
 	}
 	
 	@SuppressWarnings("unused")
-	private String getWorkDay() {
+	public String getWorkDay() {
 		return this.tbxWorkDay.getText();
 	}
 	
 	@SuppressWarnings("unused")
-	private void setWorkDay(String workDay) {
+	public void setWorkDay(String workDay) {
 		this.tbxWorkDay.setText(workDay);
 	}
 	
 	@SuppressWarnings("unused")
-	private String getEarningPerDay() {
+	public String getEarningPerDay() {
 		return this.tbxEarningPerDay.getText();
 	}
 	
 	@SuppressWarnings("unused")
-	private void setEarningPerDay(String earningPerDay) {
+	public void setEarningPerDay(String earningPerDay) {
 		this.tbxEarningPerDay.setText(earningPerDay);
 	}
 }

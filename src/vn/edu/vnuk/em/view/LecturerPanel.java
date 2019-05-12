@@ -102,74 +102,101 @@ public class LecturerPanel extends JPanel {
 	
 
 	@SuppressWarnings("unused")
-	private String getHometown() {
+	public String getHometown() {
 		return this.tbxHometown.getText();
 	}
 
 	@SuppressWarnings("unused")
-	private void setHometown(String hometown) {
+	public void setHometown(String hometown) {
 		this.tbxHometown.setText(hometown);
 	}
 
 	@SuppressWarnings("unused")
-	private String getDepartment() {
+	public String getDepartment() {
 		return this.tbxDepartment.getText();
 	}
 
 	@SuppressWarnings("unused")
-	private void setDepartment(String department) {
+	public void setDepartment(String department) {
 		this.tbxDepartment.setText(department);
 	}
 
 	@SuppressWarnings("unused")
-	private String getAllowance() {
+	public String getAllowance() {
 		return this.tbxAllowance.getText();
 	}
 
 	@SuppressWarnings("unused")
-	private void setAllowance(String allowance) {
+	public void setAllowance(String allowance) {
 		this.tbxAllowance.setText(allowance);
 	}
 
 	@SuppressWarnings("unused")
-	private String getPeriodsInMonth() {
+	public String getPeriodsInMonth() {
 		return this.tbxPeriodsInMonth.getText();
 	}
 
 	@SuppressWarnings("unused")
-	private void setPeriodsInMonth(String periodsInMonth) {
+	public void setPeriodsInMonth(String periodsInMonth) {
 		this.tbxPeriodsInMonth.setText(periodsInMonth);
 	}
 
 	@SuppressWarnings("unused")
-	private String getSalaryRatio() {
+	public String getSalaryRatio() {
 		return this.tbxSalaryRatio.getText();
 	}
 
 	@SuppressWarnings("unused")
-	private void setSalaryRatio(String salaryRatio) {
+	public void setSalaryRatio(String salaryRatio) {
 		this.tbxSalaryRatio.setText(salaryRatio);
 	}
 
 	@SuppressWarnings("unused")
-	private String getYearOfWork() {
+	public String getYearOfWork() {
 		return this.tbxYearOfWork.getText();
 	}
 
 	@SuppressWarnings("unused")
-	private void setYearOfWork(String yearOfWork) {
+	public void setYearOfWork(String yearOfWork) {
 		this.tbxYearOfWork.setText(yearOfWork);
 	}
 
 	@SuppressWarnings("unused")
-	private int getQualification() {
+	public int getQualification() {
 		return this.cbxQualification.getSelectedIndex();
+	}
+	
+	public String getQualificationString() {	
+		return this.cbxQualification.getSelectedItem().toString();
 	}
 
 	@SuppressWarnings("unused")
-	private void setQualification(int qualification) {
+	public void setQualification(int qualification) {
 		setAllowanceByQualification(qualification);
 		this.cbxQualification.setSelectedIndex(qualification);
+	}
+	
+	public void setQualification(String qualification) {
+		int qualificationInt = 0;
+		switch(qualification) {
+		case Define.QUALIFICATION_OF_MASTER: {
+			qualificationInt = Define.TYPE_OF_MASTER;
+			break;
+		}
+		
+		case Define.QUALIFICATION_OF_BACHELOR: {
+			qualificationInt = Define.TYPE_OF_BACHELOR;
+			break;
+		}
+		
+		case Define.QUALIFICATION_OF_DOCTOR: {
+			qualificationInt = Define.TYPE_OF_DOCTOR;
+			break;
+		}
+		}
+		
+		setAllowanceByQualification(qualificationInt);
+		this.cbxQualification.setSelectedIndex(qualificationInt);
 	}
 	
 	private void setAllowanceByQualification(int qualification) {
