@@ -1,6 +1,8 @@
 package vn.edu.vnuk.em.view;
 
 import java.awt.EventQueue;
+import java.awt.Toolkit;
+import java.awt.Window;
 
 import javax.swing.JFrame;
 import javax.swing.table.DefaultTableModel;
@@ -22,6 +24,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 
 import java.awt.Component;
+import java.awt.Dimension;
 
 import javax.swing.JComboBox;
 import javax.swing.JTextField;
@@ -150,6 +153,7 @@ public class Application extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				AddNewEmployee addNewEmployeeFrame = new AddNewEmployee(new Person(), Define.TYPE_OF_ACTION_CREATE);
 				addNewEmployeeFrame.setSize(500, 510);
+				centreWindow(addNewEmployeeFrame);
 				addNewEmployeeFrame.setVisible(true);
 			}
 		});
@@ -192,14 +196,33 @@ public class Application extends JFrame {
 		});
 		
 		JMenuItem viewMenuItem = new JMenuItem("View details");
-		viewMenuItem.addMouseListener(new MouseAdapter() {
-			public void mouseClicked(MouseEvent e) {
-				
+		viewMenuItem.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				Person person = null;
+				try {
+					person = new PersonDao().read(getPersonIDSelected());
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				AddNewEmployee addNewEmployee = new AddNewEmployee(person, Define.TYPE_OF_ACTION_EDIT);
+				addNewEmployee.setSize(500, 510);
+				centreWindow(addNewEmployee);	
+				addNewEmployee.setVisible(true);
 			}
 		});
 		
 		popup.add(deleteMenuItem);
 		popup.add(viewMenuItem);
+	}
+	
+	public static void centreWindow(Window frame) {
+	    Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
+	    int x = (int) ((dimension.getWidth() - frame.getWidth()) / 2);
+	    int y = (int) ((dimension.getHeight() - frame.getHeight()) / 2);
+	    frame.setLocation(x, y);
 	}
 	
 	private int getTypeSelected() {

@@ -199,6 +199,7 @@ public class PersonDao {
             statement.setString(1, person.getName());
             statement.setInt(2, person.getType());
             statement.setInt(3, person.getYearOfBirth());
+            statement.setLong(4, id);
 
             // 	Executing statement
 			int rowsUpdated = statement.executeUpdate();

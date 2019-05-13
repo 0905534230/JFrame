@@ -171,9 +171,9 @@ public class CasualWorkerDao {
 		
 		if (connection.isClosed()) this.connection = new ConnectionFactory().getConnection();
 		
-		String sqlQuery = "update staffs "
+		String sqlQuery = "update CasualWorkers "
 						+ "set EarningPerDay = ?, "
-						+ "    WorkDay = ?, "
+						+ "    WorkDay = ? "
 						+ "where PersonID = ?";
 		
 		System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
